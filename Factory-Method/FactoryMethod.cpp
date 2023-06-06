@@ -95,3 +95,95 @@ double Triangulo::perimetro()
 {
 	return 3 * lado;
 }
+
+
+class CreadorDeFigura {
+public:
+	virtual Figura* creaFigura() = 0;
+};
+
+class CreadorDeCirculo : public CreadorDeFigura {
+public:
+	virtual Figura* creaFigura();
+};
+
+Figura* CreadorDeCirculo::creaFigura()
+{
+	return new Circulo("Circulo", 10);
+}
+
+class CreadorDeCuadrado : public CreadorDeFigura {
+public:
+	virtual Figura* creaFigura();
+};
+
+Figura* CreadorDeCuadrado::creaFigura()
+{
+	return new Cuadrado("Cuadrado", 10);
+}
+
+class CreadorDeTriangulo : public CreadorDeFigura {
+public:
+	virtual Figura* creaFigura();
+};
+
+Figura* CreadorDeTriangulo::creaFigura()
+{
+	return new Triangulo("Triangulo", 10);
+}
+
+//-------------------------------------------------------------------
+//----------------------Manejador de figuras-------------------------
+
+class ManejadorDeFigura {
+private:
+	Figura* figura;
+	CreadorDeFigura* creador;
+public:
+	void setCreador(CreadorDeFigura* cread) {
+		creador = cread;
+	}
+	void crearFigura() {
+		figura = creador->creaFigura();
+	}
+	Figura* getFigura() {
+		return figura;
+	}
+};
+
+
+int main() {
+	Figura* miFigura = nullptr;
+	CreadorDeFigura* cf1 = nullptr;
+	ManejadorDeFigura* mf = new ManejadorDeFigura();
+
+	int op = 0;
+
+	cout << "----------Menu----------\n";
+	cout << "------------------------\n";
+	cout << "1- Crea circulo\n";
+	cout << "2- Crea cuadrado\n";
+	cout << "3- Crea triangulo\n";
+	cout << "------------------------\n" << endl;
+	cout << "Digite la opcion: ";
+	cin >> op;
+	switch (op) {
+	case 1: cf1 = new CreadorDeCirculo(); break;
+	case 2: cf1 = new CreadorDeCuadrado(); break;
+	case 3: cf1 = new CreadorDeTriangulo(); break;
+	};
+	mf->setCreador(cf1);
+	mf->crearFigura();
+	miFigura = mf->getFigura();
+
+	cout << "Se acaba de crear la figura...." << endl;
+	cout << miFigura->getTipo() << endl;
+	cout << "Area de la figura: " << miFigura->area() << endl;
+	cout << "Perimetro de la figura: " << miFigura->perimetro() << endl;
+
+	return 0;
+}
+
+
+
+// Tarea moral
